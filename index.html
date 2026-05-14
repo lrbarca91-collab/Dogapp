@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Rescue App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <h1>Find Your Dog</h1>
+
+        <div id="card-container"></div>
+
+    </div>
+
+    <!-- Sponsor Modal -->
+    <div id="sponsorModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Sponsor This Dog</h2>
+
+            <input type="number" id="sponsorAmount" placeholder="Enter amount">
+
+            <button id="paypalButton">Continue to PayPal</button>
+            <button onclick="closeSponsorModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Adoption Modal -->
+    <div id="adoptionModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Adoption Application</h2>
+
+            <form id="adoptionForm">
+                <input type="text" placeholder="Full Name" required>
+                <input type="number" placeholder="Age" required>
+                <input type="text" placeholder="Address" required>
+                <input type="email" placeholder="Email" required>
+                <input type="text" placeholder="Phone Number" required>
+
+                <button type="submit">Submit Application</button>
+            </form>
+
+            <button onclick="closeAdoptionModal()">Close</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
