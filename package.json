@@ -5,6 +5,8 @@
   "main": "Frontend/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint Frontend/ --ext .js",
+    "lint:ci": "eslint Frontend/ --ext .js --max-warnings 0"
   },
   "repository": {
     "type": "git",
