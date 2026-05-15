@@ -40,7 +40,13 @@ jobs:
             --format @microsoft/eslint-formatter-sarif \
             --output-file eslint-results.sarif
         continue-on-error: true
-
+      - name: Debug - check sarif was created
+        run: |
+          echo "=== files in root after eslint run ==="
+          ls -la
+          echo "=== sarif file exists? ==="
+          ls eslint-results.sarif || echo "SARIF FILE NOT CREATED"
+          
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v4
         with:
