@@ -15,6 +15,7 @@ class Dog(DB.Model):
     spayed = DB.Column(DB.Boolean)
     sponsorship_total = DB.Column(DB.Float, default=0)
     adopted = DB.Column(DB.Boolean, default=False)
+    image_url = DB.Column(DB.String(500))
 
 
 class Sponsorship(DB.Model):

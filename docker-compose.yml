@@ -1,19 +1,92 @@
 version: '3.9'
 
 services:
+  # Frontend Service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: dog-rescue-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - dog-rescue-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # Backend Service
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dog-rescue-backend
     ports:
       - "5000:5000"
-    depends_on:
-      - db
-
-  db:
-    image: postgres:15
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: dogs
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dog-rescue-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: dog-rescue-db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - dog-rescue-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Database Admin Tool
+  adminer:
+    image: adminer:latest
+    container_name: dog-rescue-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - dog-rescue-network
+    restart: unless-stopped
+    profiles:
+      - tools
+
+networks:
+  dog-rescue-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dog Rescue App</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID"></script>
 </head>
 <body>
 
@@ -21,10 +22,12 @@
         <div class="modal-content">
             <h2>Sponsor This Dog</h2>
 
-            <input type="number" id="sponsorAmount" placeholder="Enter amount">
+            <input type="number" id="sponsorAmount" placeholder="Enter amount in USD" min="1" step="0.01">
+            <input type="text" id="sponsorName" placeholder="Your Name" required>
 
-            <button id="paypalButton">Continue to PayPal</button>
-            <button onclick="closeSponsorModal()">Close</button>
+            <div id="paypal-button-container" style="margin: 20px 0;"></div>
+
+            <button onclick="closeSponsorModal()" style="margin-top: 10px;">Close</button>
         </div>
     </div>
 
@@ -33,12 +36,12 @@
         <div class="modal-content">
             <h2>Adoption Application</h2>
 
-            <form id="adoptionForm">
-                <input type="text" placeholder="Full Name" required>
-                <input type="number" placeholder="Age" required>
-                <input type="text" placeholder="Address" required>
-                <input type="email" placeholder="Email" required>
-                <input type="text" placeholder="Phone Number" required>
+            <form id="adoptionForm" onsubmit="submitAdoption(event)">
+                <input type="text" id="fullName" placeholder="Full Name" required>
+                <input type="number" id="age" placeholder="Age" required>
+                <input type="text" id="address" placeholder="Address" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="text" id="phone" placeholder="Phone Number" required>
 
                 <button type="submit">Submit Application</button>
             </form>
