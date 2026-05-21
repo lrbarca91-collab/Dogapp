@@ -53,3 +53,15 @@ jobs:
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
+
+backend-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # This official action sets up Ruff and runs it instantly
+      - name: Run Ruff Linter
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: "check" # This tells Ruff to scan the whole repo
