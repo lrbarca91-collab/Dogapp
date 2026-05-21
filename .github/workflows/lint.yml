@@ -65,9 +65,7 @@ backend-lint:
         uses: astral-sh/ruff-action@v3
         with:
           args: "check" # This tells Ruff to scan the whole repo
-
-Dockerfile Lint
-  docker-lint:
+docker-lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
