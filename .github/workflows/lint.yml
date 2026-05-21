@@ -65,3 +65,16 @@ backend-lint:
         uses: astral-sh/ruff-action@v3
         with:
           args: "check" # This tells Ruff to scan the whole repo
+
+Dockerfile Lint
+  docker-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Uses the official Hadolint action to scan your Dockerfile
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: "Dockerfile" # Change this path if your Dockerfile is inside a folder (e.g., Backend/Dockerfile)
