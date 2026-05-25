@@ -1,40 +1,99 @@
-{
-  "name": "dogapp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "Frontend/app.js",
-  "type": "commonjs",
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint Frontend/ --ext .js",
-    "lint:ci": "eslint Frontend/ --ext .js --max-warnings 0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coverageThreshold": {
-      "global": {
-        "lines": 80
-      }
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lrbarca91-collab/Dogapp.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lrbarca91-collab/Dogapp/issues"
-  },
-  "homepage": "https://github.com/lrbarca91-collab/Dogapp#readme",
-  "devDependencies": {
-    "@microsoft/eslint-formatter-sarif": "^3.1.0",
-    "eslint": "^8.57.1",
-    "jest": "^29.0.0"
-  }
-}
-    }
-  }
-}
-}
+name: Frontend Tests (Lint + Jest)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  # ── Job 1: ESLint ───────────────────────────────────────────────────
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint:ci
+
+  # ── Job 2: Python Lint ──────────────────────────────────────────────
+  backend-lint:
+    name: Backend Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Flake8
+        run: pip install flake8
+
+      - name: Run Flake8
+        run: flake8 Backend/ --max-line-length=120
+
+  # ── Job 3: Docker Lint ──────────────────────────────────────────────
+  docker-lint:
+    name: Docker Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+  # ── Job 4: Jest Unit Tests ──────────────────────────────────────────
+  jest:
+    name: Jest Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest unit tests
+        run: npm test -- --ci --coverage --coverageReporters=text --coverageReporters=lcov --coverageReporters=json-summary
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-coverage-report
+          path: coverage/
+          retention-days: 7
+
+      - name: Jest coverage summary
+        if: github.event_name == 'pull_request'
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          coverage-summary-path: ./coverage/coverage-summary.json
