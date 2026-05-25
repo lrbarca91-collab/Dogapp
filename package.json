@@ -3,10 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "Frontend/app.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint Frontend/ --ext .js",
     "lint:ci": "eslint Frontend/ --ext .js --max-warnings 0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "lines": 80
+      }
+    }
   },
   "repository": {
     "type": "git",
@@ -15,29 +24,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/lrbarca91-collab/Dogapp/issues"
   },
   "homepage": "https://github.com/lrbarca91-collab/Dogapp#readme",
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
-    "eslint": "^8.57.1"
-  }
-
-{
-  "scripts": {
-    "test": "jest"
-  },
-  "devDependencies": {
+    "eslint": "^8.57.1",
     "jest": "^29.0.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coverageThreshold": {
-      "global": {
-        "lines": 80
-      }
+  }
+}
     }
   }
 }
