@@ -24,4 +24,21 @@
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "eslint": "^8.57.1"
   }
+
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "lines": 80
+      }
+    }
+  }
+}
 }
