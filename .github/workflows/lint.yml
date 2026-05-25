@@ -9,6 +9,7 @@ on:
     - cron: '17 7 * * 2'
 
 jobs:
+
   eslint:
     name: Run eslint scanning
     runs-on: ubuntu-latest
@@ -16,7 +17,6 @@ jobs:
       contents: read
       security-events: write
       actions: read
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Run ESLint
         env:
@@ -41,13 +41,6 @@ jobs:
             --output-file eslint-results.sarif
         continue-on-error: true
 
-      - name: Debug - check sarif was created
-        run: |
-          echo "=== files in root after eslint run ==="
-          ls -la
-          echo "=== sarif file exists? ==="
-          ls eslint-results.sarif || echo "SARIF FILE NOT CREATED"
-          
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v3
         with:
@@ -55,6 +48,7 @@ jobs:
           wait-for-processing: true
 
   backend-lint:
+    name: Backend Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -66,6 +60,7 @@ jobs:
           args: "check"
 
   docker-lint:
+    name: Docker Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -75,3 +70,30 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: "Dockerfile"
+
+  jest:
+    name: Jest Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest unit tests
+        run: npm test -- --ci --coverage --coverageReporters=text --coverageReporters=lcov --coverageReporters=json-summary
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-coverage-report
+          path: coverage/
+          retention-days: 7
