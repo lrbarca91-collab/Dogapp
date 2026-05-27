@@ -99,6 +99,9 @@ jobs:
   # ----------------------------------------------------------------------
   # ADDED: Pytest Integration Tests using Testcontainers
   # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # FIXED: Pytest Integration Tests using Testcontainers
+  # ----------------------------------------------------------------------
   pytest-integration:
     name: Pytest Integration Tests
     runs-on: ubuntu-latest
@@ -111,17 +114,17 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
-          # Points explicitly to your subfolder dependency map
-          cache-dependency-path: Dogapp/requirements-dev.txt
+          # FIXED: Look for requirements-dev.txt at the repository root
+          cache-dependency-path: requirements-dev.txt
 
       - name: Install Python Testing Dependencies
         run: |
           python -m pip install --upgrade pip
-          cd Dogapp
+          # FIXED: Removed 'cd Dogapp' since we are already in the right place
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
 
       # Fires pytest inside Ubuntu where the Docker engine handles container mapping natively
       - name: Execute Pytest with Testcontainers
         run: |
-          cd Dogapp
+          # FIXED: Running directly from the root where tests/ lives
           python -m pytest
