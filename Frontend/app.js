@@ -300,3 +300,5 @@ window.openAdoptionModal = openAdoptionModal;
 window.closeAdoptionModal = closeAdoptionModal;
 window.submitAdoption = submitAdoption;
 window.fetchDogs = fetchDogs;
+window.renderDogs = renderDogs;
+window.showError = showError;
