@@ -10,7 +10,6 @@ psycopg2-binary==2.9.12
 Pygments==2.20.0
 pytest==9.0.3
 python-dotenv==1.2.2
-pywin32==311
 requests==2.34.2
 testcontainers==4.14.2
 typing_extensions==4.15.0
