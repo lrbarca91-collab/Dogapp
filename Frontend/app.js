@@ -93,18 +93,45 @@ function showError(message) {
 }
 
 // Modal Functions
+
 function openSponsorModal(dogId) {
-    const dog = dogsData.find(d => d.id === dogId);
-    if (!dog) {
-        showError('Dog not found');
-        return;
-    }
-    
+    const modal = document.getElementById('sponsorModal');
+
+    if (!modal) return;
+
     currentSponsorDogId = dogId;
-    document.getElementById('sponsorModal').setAttribute('data-dog-id', dogId);
-    document.getElementById('sponsorModal').classList.remove('hidden');
-    document.getElementById('sponsorAmount').value = '';
-    document.getElementById('sponsorName').value = '';
+
+    modal.setAttribute('data-dog-id', String(dogId));
+
+    modal.classList.remove('hidden');
+
+    const sponsorAmount =
+        document.getElementById('sponsorAmount');
+
+    const sponsorName =
+        document.getElementById('sponsorName');
+
+    if (sponsorAmount) {
+        sponsorAmount.value = '';
+    }
+
+    if (sponsorName) {
+        sponsorName.value = '';
+    }
+}
+
+function openAdoptionModal(dogId) {
+    const modal =
+        document.getElementById('adoptionModal');
+
+    if (!modal) return;
+
+    modal.setAttribute(
+        'data-dog-id',
+        String(dogId)
+    );
+
+    modal.classList.remove('hidden');
 }
 
 function closeSponsorModal() {
